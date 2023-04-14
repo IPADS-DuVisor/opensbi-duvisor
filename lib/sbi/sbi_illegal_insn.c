@@ -15,6 +15,7 @@
 #include <sbi/sbi_illegal_insn.h>
 #include <sbi/sbi_trap.h>
 #include <sbi/sbi_unpriv.h>
+#include <sbi/sbi_console.h>
 
 typedef int (*illegal_insn_func)(ulong insn, struct sbi_trap_regs *regs);
 
@@ -28,6 +29,7 @@ static int truly_illegal_insn(ulong insn, struct sbi_trap_regs *regs)
 	trap.tval2 = 0;
 	trap.tinst = 0;
 
+	sbi_printf("%s: 0x%lx, 0x%lx, 0x%lx. \n", __func__,trap.epc, trap.cause, trap.tval);
 	return sbi_trap_redirect(regs, &trap);
 }
 

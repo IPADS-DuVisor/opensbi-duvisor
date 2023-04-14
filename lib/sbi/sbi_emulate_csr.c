@@ -44,6 +44,7 @@ int sbi_emulate_csr_read(int csr_num, struct sbi_trap_regs *regs,
 #else
 	bool virt = (regs->mstatus & MSTATUS_MPV) ? TRUE : FALSE;
 #endif
+	sbi_printf("%s: csr_num: 0x%x, prev_mode 0x%lx, virt %d.\n", __func__, csr_num, prev_mode, virt);
 
 	switch (csr_num) {
 	case CSR_HTIMEDELTA:
@@ -159,7 +160,7 @@ int sbi_emulate_csr_write(int csr_num, struct sbi_trap_regs *regs,
 #else
 	bool virt = (regs->mstatus & MSTATUS_MPV) ? TRUE : FALSE;
 #endif
-
+	sbi_printf("%s: csr_num: 0x%x, prev_mode 0x%lx, virt %d, value 0x%lx.\n",__func__, csr_num, prev_mode, virt, csr_val);
 	switch (csr_num) {
 	case CSR_HTIMEDELTA:
 		if (prev_mode == PRV_S && !virt)

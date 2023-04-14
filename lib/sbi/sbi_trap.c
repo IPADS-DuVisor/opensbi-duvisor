@@ -211,6 +211,7 @@ int sbi_trap_redirect(struct sbi_trap_regs *regs,
  */
 void sbi_trap_handler(struct sbi_trap_regs *regs)
 {
+	// sbi_printf("%s: start \n", __func__);
 	int rc = SBI_ENOTSUPP;
 	const char *msg = "trap handler failed";
 	ulong mcause = csr_read(CSR_MCAUSE);
@@ -221,7 +222,7 @@ void sbi_trap_handler(struct sbi_trap_regs *regs)
 		mtval2 = csr_read(CSR_MTVAL2);
 		mtinst = csr_read(CSR_MTINST);
 	}
-
+	// sbi_printf("%s: mcause 0x%lx, mtval 0x%lx, mepc 0x%lx. \n", __func__, mcause, mtval, regs->mepc);
 	if (mcause & (1UL << (__riscv_xlen - 1))) {
 		mcause &= ~(1UL << (__riscv_xlen - 1));
 		switch (mcause) {

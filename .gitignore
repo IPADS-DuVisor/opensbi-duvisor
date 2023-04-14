@@ -5,6 +5,7 @@
 
 #Build & install directories
 build/
+duvisor-build/
 install/
 
 # Development friendly files

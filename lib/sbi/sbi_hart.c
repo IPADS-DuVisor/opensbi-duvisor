@@ -86,6 +86,27 @@ static int fp_init(struct sbi_scratch *scratch)
 	return 0;
 }
 
+// uint64_t rdvtimecmp(){
+//     register unsigned long vtimecmp asm("a0");
+//     asm volatile(".word 0xe0102577\r\n");
+//     return vtimecmp;
+// }
+
+// void wrvtimecmp(uint64_t vtimecmp){
+//     asm volatile(".word 0xe0a01077\r\n");
+// }
+
+// uint64_t rdvtimectl(){
+//     register unsigned long vtimectl asm("a0");
+//     asm volatile(".word 0xf0202577\r\n");
+//     return vtimectl;
+// }
+
+
+// void wrvtimectl(uint64_t vtimectl){
+//     asm volatile(".word 0xf0a01077\r\n");
+// }
+
 static int delegate_traps(struct sbi_scratch *scratch)
 {
 	const struct sbi_platform *plat = sbi_platform_ptr(scratch);
@@ -96,7 +117,8 @@ static int delegate_traps(struct sbi_scratch *scratch)
 		return 0;
 
 	/* Send M-mode interrupts and most exceptions to S-mode */
-	interrupts = MIP_SSIP | MIP_STIP | MIP_SEIP;
+	interrupts = MIP_SSIP | MIP_STIP | MIP_SEIP | MIP_UTIP | MIP_USIP;
+	// interrupts = MIP_SSIP | MIP_STIP | MIP_SEIP;
 	exceptions = (1U << CAUSE_MISALIGNED_FETCH) | (1U << CAUSE_BREAKPOINT) |
 		     (1U << CAUSE_USER_ECALL);
 	if (sbi_platform_has_mfaults_delegation(plat))
@@ -121,6 +143,10 @@ static int delegate_traps(struct sbi_scratch *scratch)
 
 	csr_write(CSR_MIDELEG, interrupts);
 	csr_write(CSR_MEDELEG, exceptions);
+
+    csr_write(CSR_SIDELEG, 0ULL);
+    csr_write(CSR_SEDELEG, 0ULL);
+	// wrvtimectl(0);
 
 	return 0;
 }
